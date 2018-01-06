@@ -5,11 +5,6 @@ def bubblesort(inp):
     except:
         return False
     
-    #wanna check
-    #   List is empty?
-    #   Check if list is 1 element long bc nothing would get sorted
-    #   List is compized of non integers
-    
     if A == []:
         return False
     if len(A) == 1:
