@@ -2,7 +2,7 @@
 This code preforms common operations one would do in a first year linear algebra course such as Gaussian Elimination, checking if a set of vectors are linearly independent, and Change of Basis.
 
 ## Matrix
-In essense a matrix is just a 2D list. Here is the list of methods associated with the matrix object.
+In essense a matrix is just a 2D list. Here are the list of methods associated with the matrix object.
 
 * .get()
 * .setRow(r)
@@ -26,10 +26,10 @@ In essense a matrix is just a 2D list. Here is the list of methods associated wi
 Moreover I can preform operations between matrices such as add, subtract, multiply, and augment.
 
 ### Matrix Properties
-There are many important types of matrices. The file `matrix_prop.py` contains functiosn to check or produce special types of matrices.  
+There are many important types of matrices. The file `matrix_prop.py` contains functions to check or produce special types of matrices.  
 
 ## Vector
-In essense a vector is just a 1D list. Here are some of the methods associated with the vector object.
+In essense a vector is just a 1D list. Here are the list of methods associated with the vector object.
 
 * .get()
 * .set(L)
