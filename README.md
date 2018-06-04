@@ -65,3 +65,6 @@ I have implemented many data structures in C, which are available in the reposit
 
 * Encryption
 * Solution to Optimal Scheduling Problem
+
+## One Liners File
+Python has lambda notation for list generation, which can be useful. I think people generally over-use this notation however, sacraficing readability for brevity. I generally value readability of code, so I would never actually use these one-liners. However, I do enjoy the intellectual excercise of trying to figure out how to make them.
