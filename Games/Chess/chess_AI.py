@@ -1,28 +1,29 @@
-from chessLib_helper import *
-from chessLib_tree import *
+from helper import *
+from tree import *
 from random import randint
 
+#_______________________ "Random" AI _______________________#
 def Random(board,player):
     other_player = 0
     if player == 10:
         other_player = 20
     if player == 20:
         other_player = 10
-   
+
     count = 0
     out = []
     while out == [] and count < 20:
         #getting a random peice
         possible_piece = GetPlayerPositions(board, player)
         piece_pos = possible_piece[randint(0,len(possible_piece)-1)][1:3]
-        
+
         #getting a random move
         possible_moves = GetPieceLegalMoves(board, piece_pos)
         #print possible_moves
         #some pieces will have no legal moves, and will throw an error
         if possible_moves != []:
             piece_new_pos = possible_moves[randint(0,len(possible_moves)-1)]
-            
+
             #making an uncoupled temparay board
             temp = []
             for i in range(0,len(board)):
@@ -38,6 +39,18 @@ def Random(board,player):
         count += 1
     return out
 
+#_______________________ "Defensive" AI _______________________#
+
+#Philosophy of the AI:
+#       I coded this AI to make it as hard to beat as possible
+#       However, it does not have an aggressive bone in it's body
+#       It will not try to checkmate you or attack it
+#       I equipt it with the most defensive opening in chess: the Hippopotamus Defense
+#       It's actually quite hard to beat tbh
+
+""" Starting with all the helper functions """
+
+#Adding an opening book so that it has some direction at the beginning of the game
 def Opening(board, player):
     if player == 10:
         hyppo_defence = [   [[1,6],[2,6]], #pawn up
@@ -56,7 +69,7 @@ def Opening(board, player):
                             [[0,7],[0,5]], #rook over
                             [[1,7],[0,6]]  #king castled
                         ]
-        hyppo_piece = [ 1, 3, 1, 1, 3, 1, 3, 1, 3, 1, 1000, 1000, 1000, 5, 1000, 0, 0, 0 ] 
+        hyppo_piece = [ 1, 3, 1, 1, 3, 1, 3, 1, 3, 1, 1000, 1000, 1000, 5, 1000, 0, 0, 0 ]
         for i in range(0,len(hyppo_defence)):
             m = hyppo_defence[i]
             if isLegalMove(board,m[0],m[1]) and pieceValue[board[m[0][0]][m[0][1]]%10] == hyppo_piece[i]:
@@ -78,13 +91,14 @@ def Opening(board, player):
                             [[7,7],[7,5]], #rook over
                             [[6,7],[7,6]]  #king castled
                         ]
-        hyppo_piece = [ 1, 3, 1, 1, 3, 1, 3, 1, 3, 1, 1000, 1000, 1000, 5, 1000, 0, 0, 0 ] 
+        hyppo_piece = [ 1, 3, 1, 1, 3, 1, 3, 1, 3, 1, 1000, 1000, 1000, 5, 1000, 0, 0, 0 ]
         for i in range(0,len(hyppo_defence)):
             m = hyppo_defence[i]
             if isLegalMove(board,m[0],m[1]) and pieceValue[board[m[0][0]][m[0][1]]%10] == hyppo_piece[i]:
                 return [True, m]
     return [False, []]
 
+#This is really where the magic happens
 def candidateMoves(board, player, n):
     other_player = 0
     if player == 10:
@@ -98,7 +112,7 @@ def candidateMoves(board, player, n):
     player_under_threat = []            #[ [pos, [players_attacking]], ... ]
     other_player_under_threat = []      #[ [pos, [players_attacking]], ... ]
     candidate = []                      #candidate moves
-    #getting positions of AI player and of other player 
+    #getting positions of AI player and of other player
     #getting legal moves of AI player
     for i in range(0,8):
         for j in range(0,8):
@@ -107,7 +121,7 @@ def candidateMoves(board, player, n):
                 legal += [[ [i,j], GetPieceLegalMoves(board, [i,j]) ]]
             if board[i][j]/10 == other_player/10:
                 other_player_pieces += [[i,j]]
-   
+
     #make sure the king isn't in check
     #if he is, we will deal with that in the loop after the one right below
     #check = isInCheck(board,player)
@@ -128,7 +142,7 @@ def candidateMoves(board, player, n):
                 temp_board[pos[0]][pos[1]] = 0
                 for p in player_under_threat:
                     #there are two scenarios:
-                    #you moved the piece being attacked, 
+                    #you moved the piece being attacked,
                     #   in which case you want to check if new_pos is protected
                     #or you moved a piece which blocked the attack
                     #   in which case you want to check if p[0] is protected
@@ -140,14 +154,14 @@ def candidateMoves(board, player, n):
                         protected = isProtected(temp_board,p[0])
                         if protected[0]:
                             candidate += [[pos,new_pos]]
-                #might not be clean, but computationally the 
+                #might not be clean, but computationally the
                 #best way I could come up with
                 #if check:
                     #if not isInCheck(temp_board,player):
                         #candidate += [[pos,new_pos]]
-    
-    
-    #check if any of blacks pieces are unprotected
+
+
+    #check if any of opponent's pieces are unprotected
     #if there is, add taking them to the list of candidate moves
     for p in other_player_pieces:
         protected = isProtected(board,p)
@@ -159,8 +173,8 @@ def candidateMoves(board, player, n):
             for p in other_player_under_threat:
                 if p == L[1][i]:
                     candidate += [[L[0], L[1][i]]]
-    
-    #figure out what stage we are in in the opening, 
+
+    #figure out what stage we are in in the opening,
     #and add the next stage to the list of candiate moves
     O = Opening(board,player)
     if O[0] == True:
@@ -171,22 +185,22 @@ def candidateMoves(board, player, n):
         out = Random(board,player)
         if out == []:
             break
-        candidate += [Random(board,player)] 
-    
+        candidate += [Random(board,player)]
+
     return candidate
-            
+
 
 def genTree(root,player,steps,n):
     #print "genTree, steps =",steps
     if steps == 0:
         return True
-    
+
     other_player = 0
     if player == 10:
         other_player = 20
     elif player == 20:
         other_player = 10
-    
+
     candidate = []
     if isInCheck(root.val,player):
         candidate = findOutCheck(root.val,player)
@@ -208,14 +222,15 @@ def genTree(root,player,steps,n):
             child_tree = tree(temp_board)
             child_tree.move = C
             root.children += [child_tree]
-    
-    #iterating through the children of the tree 
+
+    #iterating through the children of the tree
     #calling the function recursively on the child node and substracting 1 from step
     for T in root.children:
         genTree(T,other_player,steps-1,n)
-    
+
     return True
 
+#This is my main heuristic function that takes in a board state and outputs a rating
 def countMaterial(board):
     accum = 0
     for i in range(0,8):
@@ -226,6 +241,7 @@ def countMaterial(board):
                 accum -= pieceValue[board[i][j]%10]
     return accum
 
+#Another lower-weighted heuristic function
 def positional(board):
     accum = 0
     for i in range(0,8):
@@ -260,10 +276,11 @@ def positional(board):
         accum += 100
     return accum
 
+#Assign heuristic to every node in tree
 def Heuristic(root,player):
     if root == None:
         return False
-    
+
     other_player = 0
     if player == 10:
         other_player = 20
@@ -285,106 +302,15 @@ def Heuristic(root,player):
         #base case
         root.material = countMaterial(root.val)
 
-def displayNode(root):
-    if root == None:
-        return False
-    
-    #Display Function
-    pieces = {  0: 'p',
-                1: 'N',
-                2: 'B',
-                3: 'R',
-                4: 'Q',
-                5: 'K'
-            }
-    blank_board = [ ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_'],
-                    ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_'],
-                    ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_'],
-                    ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_']
-                  ]
-    out = []
-    out = "\x1b[90m" + "   1  2  3  4  5  6  7  8" + "\x1b[0m" + "\n"
-    alpha = ['a','b','c','d','e','f','g','h']
-    for i in range(7,-1,-1):
-        s_temp =  "\x1b[90m" + alpha[i] + " " + "\x1b[0m"
-        for j in range(0,8):
-            if root.val[i][j] == 0:
-                if blank_board[i][j] == '_':
-                    s_temp += " \x1b[30m" + blank_board[i][j] + "\x1b[0m "
-                else:
-                    s_temp += " \x1b[90m" + blank_board[i][j] + "\x1b[0m "
-            elif 10 <= root.val[i][j] and root.val[i][j] < 20:
-                s_temp += " \x1b[97m" + pieces[root.val[i][j]-10] + "\x1b[0m "
-            elif 20 <= root.val[i][j]:
-                s_temp += " \x1b[34m" + pieces[root.val[i][j]-20] + "\x1b[0m "
-        out += s_temp
-        if i != 0:
-            out += "\n"
-    print out
-    print
-    print
-    return out
-
-def displayTree(root):
-    if root == None:
-        return False
-    
-    #Display Function
-    pieces = {  0: 'p',
-                1: 'N',
-                2: 'B',
-                3: 'R',
-                4: 'Q',
-                5: 'K'
-            }
-    blank_board = [ ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_'],
-                    ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_'],
-                    ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_'],
-                    ['_', '#', '_', '#', '_', '#', '_', '#'],
-                    ['#', '_', '#', '_', '#', '_', '#', '_']
-                  ]
-    out = "\x1b[90m" + "   1  2  3  4  5  6  7  8" + "\x1b[0m" + "\n"
-    alpha = ['a','b','c','d','e','f','g','h']
-    for i in range(7,-1,-1):
-        s_temp =  "\x1b[90m" + alpha[i] + " " + "\x1b[0m"
-        for j in range(0,8):
-            if root.val[i][j] == 0:
-                if blank_board[i][j] == '_':
-                    s_temp += " \x1b[30m" + blank_board[i][j] + "\x1b[0m "
-                else:
-                    s_temp += " \x1b[90m" + blank_board[i][j] + "\x1b[0m "
-            elif 10 <= root.val[i][j] and root.val[i][j] < 20:
-                s_temp += " \x1b[97m" + pieces[root.val[i][j]-10] + "\x1b[0m "
-            elif 20 <= root.val[i][j]:
-                s_temp += " \x1b[34m" + pieces[root.val[i][j]-20] + "\x1b[0m "
-        out += s_temp
-        if i != 0:
-            out += "\n"
-    print out
-    print
-    print
-    #calling on children
-    #if root.children == [] it just won't go into the for loop
-    for T in root.children:
-        displayTree(T)
-    return True 
-
-
-def Smart(board,player):
+""" The actual AI """
+def Defensive(board,player):
     board_tree = tree(board)
     genTree(board_tree,player,3,12)
     Heuristic(board_tree,player)
     #displayTree(board_tree)
     if board_tree.children == []:
         return Random(board,player)
-    
+
     heuristic_list = []
     for child in board_tree.children:
         heuristic_list += [child.material + child.position]
