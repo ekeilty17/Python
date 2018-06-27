@@ -60,7 +60,7 @@ def getSquare(L,s):
                 L[8][6], L[8][7], L[8][8] ]
     #return out
     return [x for x in out if x != 0]
-    
+
 
 def isValidSudokuBoard(L):
     #This function assumes it's a 9x9 array of integers ... not gonne do those checks again
@@ -79,13 +79,13 @@ def isValidSudokuBoard(L):
 class board():
 
     def __init__(self, L):
-        
+
         """Make sure L is a 9x9 array or integers"""
         if type(L) != list:
             raise TypeError("Input is not a list")
         if len(L) != 9:
             raise TypeError("Number of rows in input does not equal 9")
-            
+
         for i in range(9):
             if len(L[i]) != 9:
                 raise TypeError("Number of columns in input does not equal 9")
@@ -93,7 +93,7 @@ class board():
                 if L[i][j] not in range(0,10):
                     #The zero indicates an empty cell
                     raise TypeError("Input list does not contain integers between 0 and 9 (inclusive)")
-        
+
         if not isValidSudokuBoard(L):
             raise TypeError("Not a valid Sudoku board")
         self.store = L
@@ -103,10 +103,10 @@ class board():
         for row in self.store:
             out += [list(row)]
         return out
-    
+
     def new(self):
         return board(self.copy())
-    
+
     def Display(self):
         out =  "\t \033[90m   1 2 3   4 5 6   7 8 9\033[0m\n"
         out += "\t \033[90m  -----------------------\033[0m\n"
@@ -128,13 +128,17 @@ class board():
                 out += "\t\033[90m   -----------------------\033[0m"
         print out
         return out
-    
+
     def isComplete(self):
         for i in range(9):
             for j in range(9):
                 if self.store[i][j] == 0:
                     return False
         return True
-    
-    def move(self,num,pos):
+
+    # Need this to match the general search tree syntax
+    def move_search(self, L):
+        self.move(L[0], L[1])
+
+    def move(self, num, pos):
         self.store[pos[0]][pos[1]] = num

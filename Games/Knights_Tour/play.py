@@ -1,5 +1,5 @@
 from game import *
 
 #Human()
-BruteForce()
-#BruteForce_Closed()
+#BruteForce()
+BruteForce_Closed()

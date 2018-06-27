@@ -112,7 +112,6 @@ class board:
                     self.cnt += 1
         self.visited[pos[0]][pos[1]] = 'K'
         self.curr = pos
-        return self
     
     def outRange(self,i,j):
         if i < 0:

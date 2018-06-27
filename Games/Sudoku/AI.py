@@ -1,6 +1,6 @@
 from board import *
 from puzzles import *
-from tree import *
+from general_search_tree import *
 
 
 
@@ -156,53 +156,66 @@ def isContradiction(B):
                 return True
     return False
 
-# I implement a Depth First Search Tree
-def guess_and_check(root):
-    # Base cases
-    if isContradiction(root.val):
-        return False
-    if not isValidSudokuBoard(root.val.store):
-        print "HI"
-        return False
-    if root.val.isComplete():
-        return root
+class Sudoku_search_tree(general_search_tree):
 
-    root.val.store = intermediate_AI(root.val.store)
+    def __init__(self, val):
+        general_search_tree.__init__(self, val)
 
-    # Have to call base cases again in case medium_AI arrived at any contradictions
-    if isContradiction(root.val):
-        return False
-    if not isValidSudokuBoard(root.val.store):
-        return False
-    if root.val.isComplete():
-        return root
+        # You can run it without this line, which means it's a pure search tree with no logical deductions
+        # It takes about a minute, but it will find the solution
+        # Basically, if you want the AI to find the solution faster, you need to improve this line
+        self.val.store = intermediate_AI(self.val.store)
 
-    # needed to make a special function for the sorting
-    def length(C):
-        return len(C[0])
-    # getting a list of candidate moves from all empty cells
-    # unfortunately I have to do something ugly to keep track of the indeces
-    #   all_candidate = [ [...candidate moves...], i, j], ... ]
-    # Then sorting the list based on the number of candidate moves
-    all_candidates = [[getCandidates(root.val.store, [i,j]), [i, j]] for i in range(9) for j in range(9) if root.val.store[i][j] == 0]
-    all_candidates = sorted(all_candidates, key=length)
-    first = all_candidates[0]
-    for i in range(len(first[0])):
-        child = root.val.new()
-        child.move(first[0][i],first[1])
-        child.Display()
-        root.AddSuccessor(tree(child))
-        r = guess_and_check(root.children[-1])
-        if r != False:
-            return r
-    return False
+    def isSolution(self):
+        return self.val.isComplete()
+
+    def prune(self):
+        # There might be more cases that I could prune, which would make the AI faster
+        if isContradiction(self.val):
+            return True
+        if not isValidSudokuBoard(self.val.store):
+            return True
+        return False
+
+    def getEdges(self):
+        return [[getCandidates(self.val.store, [i,j]), [i, j]] for i in range(9) for j in range(9) if self.val.store[i][j] == 0]
+
+    def heuristic(self, L):
+        # needed to make a special function for the sorting
+        def length(C):
+            return len(C[0])
+        # getting a list of candidate moves from all empty cells
+        # unfortunately I have to do something ugly to keep track of the indeces
+        #   all_candidate = [ [...candidate moves...], i, j], ... ]
+        # Then sorting the list based on the number of candidate moves
+        L_sorted = sorted(L, key=length)
+
+        # I only need the first set of candiadte moves bc we know that one of them has to be a correct answer
+        first = L_sorted[0]
+
+        # Now I need to make L_sorted match the format the general_search_tree is expecting
+        # out = [ [num, [i,j]], ...]
+        return [[first[0][i], first[1]] for i in range(len(first[0]))]
+
+    def copy_node(self):
+        return Sudoku_search_tree( self.val.new() )
+
+    def evolve(self, E):
+        self.val.move_search(E)
+        return self
+
+    def Display(self):
+        return self.val.Display()
 
 # Should be able to solve any sudoku puzzle
 def expert_AI(game_board):
     B = board(game_board)
     B.Display()
 
-    root = guess_and_check(tree(B))
-    root.val.Display()
-    print
-    return root.val.store
+    leaf = Sudoku_search_tree(B).search()
+    if leaf == False:
+        print "Could not find solution"
+    else:
+        leaf.Display()
+
+    return leaf.val.store
