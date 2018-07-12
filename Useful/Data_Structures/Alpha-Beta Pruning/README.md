@@ -1,4 +1,4 @@
-#Alpha-Beta Pruning Tree
+# Alpha-Beta Pruning Tree
 
 This is an abstract implementation of an alpha-beta pruning search tree. which allows the search algorithm to be quickly and easily applied to specific problems with just a few method definitions.
 
