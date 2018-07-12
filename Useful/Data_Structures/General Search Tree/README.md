@@ -13,10 +13,10 @@ If we have the following tree:
 
 ```
 								 A
-							/	 |    \
-						 B		 C		 D
-						 |		/ \
-						 E	   F   G		
+							/	 |    	  \
+						   B		 C		D
+						   |		/ \
+						   E	       F   G		
 ```
 
 Then for each type of search they are processed in the following order: </br>
@@ -35,7 +35,7 @@ The logic of the Depth-First search and the abstract class definition is in `gen
 
 `use.py` is a template of how to implement the `general_search_tree`. First let's look at the class definition.
 
-```
+```python
 class specific_search_tree(general_search_tree):
 
     def __init__(self, val):
@@ -74,7 +74,7 @@ Once you have correctly defined an implementation for each method you get 2 meth
 
 `leaf.val` will be the final state of the search. To get the path the computer took in order to get from the initial staet to the final state, execute the following:
 
-```
+```python
 if leaf == False:
     print []
 else:
