@@ -1,6 +1,6 @@
 # General Search Tree
 
-This is an abstract implementation of a Depth-First search tree. The purpose of the `general_search_tree` class is to allow a quick and simple implementation of a `specific_search_tree` class with just a few method definitions.
+This is an abstract implementation of a Depth-First search tree, which allows the search algorithm to be quickly and easily applied to specific problems with just a few method definitions.
 
 ## What is a Depth-First Search?
 
@@ -33,7 +33,7 @@ A Breadth-First search will generally take up c<sup>h</sup> units of memory, whe
 
 The logic of the Depth-First search and the abstract class definition is in `general_search_tree.py`. This is what you import in order to preform the Depth-First search. Import using `from general_search_tree import *`.
 
-`use.py` is an example implementation of the `general_search_tree`. First let's look at the class definition.
+`use.py` is a template of how to implement the `general_search_tree`. First let's look at the class definition.
 
 ```
 class specific_search_tree(general_search_tree):

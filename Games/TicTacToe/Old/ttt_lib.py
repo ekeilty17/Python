@@ -1,7 +1,9 @@
 class TicTacToe:
-    # board is a 1 dim array, not a 2 dim array
-    # easier for users that way
-    # also it's only 9 spaces total so it makes it easier to iterate
+    #board is a 1 dim array, not a 2 dim array
+    #easier for users that way
+    board = []
+    row = 0
+    col = 0
 
     def __init__(self):
         self.board = []
@@ -34,14 +36,20 @@ class TicTacToe:
         print out
         return out
 
-    def isFull(self):
-        for i in self.board:
-            if i == 0:
-                return False
+    def Move(self,Pos,player):
+        if Pos < 0:
+            return False
+        if Pos >= len(self.board):
+            return False
+        if player != 1 and player != 2:
+            return False
+        if self.board[Pos] != 0:
+            return False
+        self.board[Pos] = player
         return True
 
     def AnalyzeBoard(self):
-        # return list
+        #return list
         #   -1: Error
         #   0: incomplete game
         #   1: X wins
@@ -74,23 +82,8 @@ class TicTacToe:
         if (T[2] == T[4] == T[6] == 2):
             return 2
 
-        if not self.isFull():
-            return 0
+        for i in T:
+            if i == 0:
+                return 0
 
         return 3
-
-    def copy(self):
-        new_node = TicTacToe()
-        new_node.board = list(self.board)
-        return new_node
-
-    def Move(self, Pos, player):
-        if Pos < 0:
-            return False
-        if Pos >= len(self.board):
-            return False
-        if player != 1 and player != 2:
-            return False
-        if self.board[Pos] != 0:
-            return False
-        self.board[Pos] = player

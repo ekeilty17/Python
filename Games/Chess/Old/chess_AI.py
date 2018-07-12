@@ -1,6 +1,5 @@
-from chess_lib import *
 from helper import *
-from general_alphabeta_tree import *
+from tree import *
 from random import randint
 
 #_______________________ "Random" AI _______________________#
@@ -39,109 +38,6 @@ def Random(board,player):
                 out = [piece_pos, piece_new_pos]
         count += 1
     return out
-
-#________________________ "Brute Force" _______________________#
-#This is my main heuristic function that takes in a board state and outputs a rating
-def countMaterial(board):
-    accum = 0
-    for i in range(0,8):
-        for j in range(0,8):
-            if board[i][j]/10 == 1:
-                accum += pieceValue[board[i][j]%10]
-            if board[i][j]/10 == 2:
-                accum -= pieceValue[board[i][j]%10]
-    return accum
-
-#Another lower-weighted heuristic function
-def positional(board):
-    accum = 0
-    for i in range(0,8):
-        for j in range(0,8):
-            #white
-            if board[i][j]/10 == 1:
-                #knight on the rim is dim
-                if board[i][j]%10 == 1:
-                    if j == 0 or j == 7:
-                        accum -= 0.5
-                #I want bishops back near own position
-                elif board[i][j]%10 == 2:
-                    if i == 1 or i == 2:
-                        accum += 0.1
-                if i > 4:
-                    accum -= 0.1
-            #black
-            elif board[i][j]/10 == 2:
-                #knight on the rim is dim
-                if board[i][j]%10 == 1:
-                    if j == 0 or j == 7:
-                        accum += 0.5
-                #I want bishops back near own position
-                elif board[i][j]%10 == 2:
-                    if i == 6 or i == 5:
-                        accum -= 0.1
-                if i < 3:
-                    accum += 0.1
-    if isCheckMate(board,10):
-        accum -= 100
-    elif isCheckMate(board,20):
-        accum += 100
-    return accum
-
-class BruteForce_alphabeta_tree(general_alphabeta_tree):
-
-    def __init__(self, val, player):
-        isMaximizingPlayer = None
-        if player == 10:
-            isMaximizingPlayer = True
-        else:
-            isMaximizingPlayer = False
-        general_alphabeta_tree.__init__(self, val, isMaximizingPlayer)
-        self.player = player
-        self.move = []
-
-    def evaluation(self):
-        return countMaterial(self.val.board) + positional(self.val.board)
-
-    def isLeaf(self):
-        if isCheckMate(self.val.board, self.player):
-            return True
-        # There are other cases, but I'm going to ignore them for now
-        return False
-
-    def getEdges(self):
-        legal = []
-        for i in range(0,8):
-            for j in range(0,8):
-                if self.val.board[i][j]/10 == self.player/10:
-                    L = GetPieceLegalMoves(self.val.board, [i,j])
-                    for pos in L:
-                        legal += [[ [i,j], pos ]]
-        return legal
-
-    def copy_node(self):
-        B = chess()
-        B.board = self.val.gameboard()
-        return BruteForce_alphabeta_tree( B, self.player )
-
-    def evolve(self, E):
-        # Parameter:        An Edge
-        # Return Type:      Child class that implements the general_alphabeta_tree
-        # Implementation:   REQUIRED
-        self.val.Move(E[0], E[1])
-        self.move = E
-        return self
-
-def Brute_Force(board, player):
-    B = chess()
-    B.board = board
-
-    #depth = 2          # instantaneous
-    depth = 3           # takes a few seconds
-    bestChild = BruteForce_alphabeta_tree( B, player ).getBestChild(depth)
-    print
-    print "Computer Evaluation:",bestChild.evaluation()
-    return bestChild.move
-
 
 #_______________________ "Defensive" AI _______________________#
 
@@ -202,8 +98,7 @@ def Opening(board, player):
                 return [True, m]
     return [False, []]
 
-# This is really where the magic happens
-# n is the min number of candidate moves I want to return
+#This is really where the magic happens
 def candidateMoves(board, player, n):
     other_player = 0
     if player == 10:
@@ -295,57 +190,133 @@ def candidateMoves(board, player, n):
     return candidate
 
 
-class Defensive_alphabeta_tree(general_alphabeta_tree):
+def genTree(root,player,steps,n):
+    #print "genTree, steps =",steps
+    if steps == 0:
+        return True
 
-    def __init__(self, val, player):
-        isMaximizingPlayer = None
-        if player == 10:
-            isMaximizingPlayer = True
-        else:
-            isMaximizingPlayer = False
-        general_alphabeta_tree.__init__(self, val, isMaximizingPlayer)
-        self.player = player
-        self.move = []
+    other_player = 0
+    if player == 10:
+        other_player = 20
+    elif player == 20:
+        other_player = 10
 
-    def evaluation(self):
-        return countMaterial(self.val.board) + positional(self.val.board)
+    candidate = []
+    if isInCheck(root.val,player):
+        candidate = findOutCheck(root.val,player)
+    else:
+        candidate = candidateMoves(root.val,player,n)
+    if candidate == []:
+        return False
+    #print "candidate",candidate
+    #iterating through legal moves
+    #preforming the move on a temperary board
+    #adding it as a child to the successor list
+    for C in candidate:
+        if C != []:
+            pos = C[0]
+            new_pos = C[1]
+            temp_board = copyBoard(root.val)
+            temp_board[new_pos[0]][new_pos[1]] = temp_board[pos[0]][pos[1]]
+            temp_board[pos[0]][pos[1]] = 0
+            child_tree = tree(temp_board)
+            child_tree.move = C
+            root.children += [child_tree]
 
-    def isLeaf(self):
-        if isCheckMate(self.val.board, self.player):
-            return True
-        # There are other cases, but I'm going to ignore them for now
+    #iterating through the children of the tree
+    #calling the function recursively on the child node and substracting 1 from step
+    for T in root.children:
+        genTree(T,other_player,steps-1,n)
+
+    return True
+
+#This is my main heuristic function that takes in a board state and outputs a rating
+def countMaterial(board):
+    accum = 0
+    for i in range(0,8):
+        for j in range(0,8):
+            if board[i][j]/10 == 1:
+                accum += pieceValue[board[i][j]%10]
+            if board[i][j]/10 == 2:
+                accum -= pieceValue[board[i][j]%10]
+    return accum
+
+#Another lower-weighted heuristic function
+def positional(board):
+    accum = 0
+    for i in range(0,8):
+        for j in range(0,8):
+            #white
+            if board[i][j]/10 == 1:
+                #knight on the rim is dim
+                if board[i][j]%10 == 1:
+                    if j == 0 or j == 7:
+                        accum -= 1
+                #I want bishops back near own position
+                elif board[i][j]%10 == 2:
+                    if i == 1 or i == 2:
+                        accum += 0.1
+                if i > 4:
+                    accum -= 0.1
+            #black
+            elif board[i][j]/10 == 2:
+                #knight on the rim is dim
+                if board[i][j]%10 == 1:
+                    if j == 0 or j == 7:
+                        accum += 1
+                #I want bishops back near own position
+                elif board[i][j]%10 == 2:
+                    if i == 6 or i == 5:
+                        accum -= 0.1
+                if i < 3:
+                    accum += 0.1
+    if isCheckMate(board,10):
+        accum -= 100
+    elif isCheckMate(board,20):
+        accum += 100
+    return accum
+
+#Assign heuristic to every node in tree
+def Heuristic(root,player):
+    if root == None:
         return False
 
-    def getEdges(self):
-        return candidateMoves(self.val.board, self.player, 5)
+    other_player = 0
+    if player == 10:
+        other_player = 20
+    else:
+        other_player = 10
 
-    def copy_node(self):
-        B = chess()
-        B.board = self.val.gameboard()
-        return Defensive_alphabeta_tree( B, self.player )
+    for child in root.children:
+        Heuristic(child,other_player)
 
-    def evolve(self, E):
-        # Parameter:        An Edge
-        # Return Type:      Child class that implements the general_alphabeta_tree
-        # Implementation:   REQUIRED
-        self.val.Move(E[0], E[1])
-        self.move = E
-        return self
-
-
+    if root.children != []:
+        heuristic_list = []
+        for child in root.children:
+            heuristic_list += [child.material + child.position]
+        if player == 10:
+            root.material = root.children[heuristic_list.index(max(heuristic_list))].material
+        else:
+            root.material = root.children[heuristic_list.index(min(heuristic_list))].material
+    else:
+        #base case
+        root.material = countMaterial(root.val)
 
 """ The actual AI """
-def Defensive(board, player):
-    B = chess()
-    B.board = board
+def Defensive(board,player):
+    board_tree = tree(board)
+    genTree(board_tree,player,3,12)
+    Heuristic(board_tree,player)
+    #displayTree(board_tree)
+    if board_tree.children == []:
+        return Random(board,player)
 
-    #depth = 2          # instantaneous
-    #depth = 3           # takes a few seconds
-    depth = 4           # takes a few seconds
-    bestChild = Defensive_alphabeta_tree( B, player ).getBestChild(depth)
-    print
-    if bestChild.isMaximizingPlayer:
-        print "Computer Evaluation:",bestChild.beta
+    heuristic_list = []
+    for child in board_tree.children:
+        heuristic_list += [child.material + child.position]
+    if player == 10:
+        return board_tree.children[heuristic_list.index(max(heuristic_list))].move
+    elif player == 20:
+        return board_tree.children[heuristic_list.index(min(heuristic_list))].move
     else:
-        print "Computer Evaluation:",bestChild.alpha
-    return bestChild.move
+        return Random(board,player)

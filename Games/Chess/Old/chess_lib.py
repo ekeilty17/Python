@@ -24,7 +24,7 @@ class chess:
                     ['_', '#', '_', '#', '_', '#', '_', '#'],
                     ['#', '_', '#', '_', '#', '_', '#', '_']
                   ]
-
+    
     def __init__(self):
         self.board = [  [13, 11, 12, 14, 15, 12, 11, 13],
                         [10, 10, 10, 10, 10, 10, 10, 10],
@@ -35,10 +35,7 @@ class chess:
                         [20, 20, 20, 20, 20, 20, 20, 20],
                         [23, 21, 22, 24, 25, 22, 21, 23]
                      ]
-        #TODO use thses variables to account for when both players can castle
-        self.canWhiteCastle = True
-        self.canBlackCastle = False
-
+        
     def Display(self):
         out = "\x1b[90m" + "   a  b  c  d  e  f  g  h" + "\x1b[0m" + "\n"
         for i in range(7,-1,-1):
@@ -81,13 +78,7 @@ class chess:
                 out += "\n"
         print out
         return out
-
-    def gameboard(self):
-        out = []
-        for row in self.board:
-            out += [list(row)]
-        return out
-
+    
     def Move(self,pos,new_pos):
         if self.board[pos[0]][pos[1]] == 0:
             return False
@@ -102,28 +93,12 @@ class chess:
             self.board[pos[0]][pos[1]] = self.board[new_pos[0]][new_pos[1]]
             self.board[new_pos[0]][new_pos[1]] = old_pos_val
             return False
-
-        # dealing with castling
-        if pos == [0,4] and self.board[new_pos[0]][new_pos[1]] == 15:
-            if new_pos == [0,6]:
-                self.board[0][5] = 13
-                self.board[0][7] = 0
-            elif new_pos == [0,2]:
-                self.board[0][3] = 13
-                self.board[0][0] = 0
-        elif pos == [7,4] and self.board[new_pos[0]][new_pos[1]] == 25:
-            if new_pos == [7,6]:
-                self.board[7][5] = 23
-                self.board[7][7] = 0
-            elif new_pos == [7,2]:
-                self.board[7][3] = 23
-                self.board[7][0] = 0
-
-        # dealing with pawn promotion
-        # for now I'll just defaul to a queen
-        if self.board[new_pos[0]][new_pos[1]] == 10 and new_pos[0] == 7:
-            self.board[new_pos[0]][new_pos[1]] = 14
-        elif self.board[new_pos[0]][new_pos[1]] == 20 and new_pos[0] == 0:
-            self.board[new_pos[0]][new_pos[1]] = 24
-
         return True
+    
+    def gameboard(self):
+        return list(self.board)
+
+    def Unmove(self,old_board):
+        self.board = list(old_board)
+        return True
+

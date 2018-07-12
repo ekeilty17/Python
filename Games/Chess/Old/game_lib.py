@@ -24,7 +24,7 @@ def Game_HH():
     x.Display()
     mate = False
     winner = 0
-
+    
     while not mate:
         p1_valid = False
         while p1_valid == False:
@@ -33,7 +33,7 @@ def Game_HH():
             p1_move = raw_input("Piece Destination: ")
             pos = PNGtoCoord(p1_piece)
             new_pos = PNGtoCoord(p1_move)
-
+            
             if pos and new_pos:
                 if x.board[pos[0]][pos[1]] not in range(10,16):
                     print "not one of your pieces, try again"
@@ -53,7 +53,8 @@ def Game_HH():
             winner = 10
             print "White Wins!"
 
-        if not mate:
+        if not mate: 
+            print findOutCheck(x.board,20)
             p2_valid = False
             while p2_valid == False:
                 print "Black to move"
@@ -61,7 +62,7 @@ def Game_HH():
                 p2_move = raw_input("Piece Destination: ")
                 pos = PNGtoCoord(p2_piece)
                 new_pos = PNGtoCoord(p2_move)
-
+                     
                 if pos and new_pos:
                     if x.board[pos[0]][pos[1]] not in range(20,26):
                         print "not one of your pieces, try again"
@@ -85,7 +86,7 @@ def Game_HH():
 def Game_HC(human, AI):
     #human = what player the human is, either 10 or 20
     #AI is a function that takes in the board and what player it is
-
+    
     x = chess()
     x.Display()
     mate = False
@@ -101,7 +102,7 @@ def Game_HC(human, AI):
                 p1_move = raw_input("Piece Destination: ")
                 pos = PNGtoCoord(p1_piece)
                 new_pos = PNGtoCoord(p1_move)
-
+            
                 if pos and new_pos:
                     if x.board[pos[0]][pos[1]] not in range(10,16):
                         print "not one of your pieces, try again"
@@ -126,6 +127,7 @@ def Game_HC(human, AI):
                 #comp[0] = piece position
                 #comp[1] = piece destination
                 comp = AI(x.board,20)
+                print "comp: ",comp
                 x.Move(comp[0],comp[1])
                 x.Display()
                 if mate:
@@ -142,8 +144,8 @@ def Game_HC(human, AI):
             x.Display()
             if mate:
                 winner = 10
-                print "White Wins!"
-
+                print "White Wins!" 
+            
             if not mate:
                 p2_valid = False
                 while p2_valid == False:
@@ -152,7 +154,7 @@ def Game_HC(human, AI):
                     p2_move = raw_input("Piece Destination: ")
                     pos = PNGtoCoord(p2_piece)
                     new_pos = PNGtoCoord(p2_move)
-
+                
                     if pos and new_pos:
                         if x.board[pos[0]][pos[1]] not in range(20,26):
                             print "not one of your pieces, try again"
@@ -170,13 +172,13 @@ def Game_HC(human, AI):
                 mate = isCheckMate(x.board,10)
                 if mate:
                     winner = 20
-                    print "Black Wins!"
+                    print "Black Wins!" 
     return winner
 
 def Game_CC(AI_w, AI_b):
     #human = what player the human is, either 10 or 20
     #AI is a function that takes in the board and what player it is
-
+    
     x = chess()
     x.Display()
     mate = False
@@ -215,3 +217,4 @@ def Game_CC(AI_w, AI_b):
         if move_num == 30:
             break
     return winner
+

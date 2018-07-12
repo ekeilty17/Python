@@ -19,7 +19,7 @@ class general_search_tree(object):
         #   True = state is a solution to the problem being solved
         #   False = keep searching
         # Implementation:   REQUIRED
-        raise NotImplementedError("The method not implemented")
+        raise NotImplementedError("The method 'isSolution(self' was not implemented")
 
     def prune(self):
         # Parameter:        void
@@ -34,7 +34,7 @@ class general_search_tree(object):
         # Return Type:      A list of Edges
         #   See comments in self.search() for my definition of an Edge
         # Implementation:   REQUIRED
-        raise NotImplementedError("The method not implemented")
+        raise NotImplementedError("The method 'getEdges(self)' was not implemented")
 
     def heuristic(self, L):
         # Parameter:        Unordered list of Edges
@@ -46,13 +46,13 @@ class general_search_tree(object):
         # Parameter:        void
         # Return Type:      Child class that implements the general_search_tree class
         # Implementation:   REQUIRED
-        raise NotImplementedError("The method not implemented")
+        raise NotImplementedError("The method 'copy_node(self)' was not implemented")
 
     def evolve(self, E):
-        # Parameter:        void
+        # Parameter:        An Edge
         # Return Type:      Child class that implements the general_search_tree class
         # Implementation:   REQUIRED
-        raise NotImplementedError("The method not implemented")
+        raise NotImplementedError("The method 'evolve(self, E)' was not implemented")
 
     def Display(self):
         # Parameter:        void

@@ -33,21 +33,17 @@ def GetPieceLegalMoves(board, position):
     elif board[r][c]%10 == 0:
         #print "pawn"
         if board[r][c] == 10: #white pawn
-            if r == 1 and board[r+2][c] == 0:
-                out += [[r+2, c]]   #if on home square, pawn can move up 2 steps
-            if (not outRange(r+1, c)) and board[r+1][c] == 0:
-                out += [[r+1, c]]   #can move one step forward on any square
             if (not outRange(r+1, c-1)) and (board[r+1][c-1] in range(20,26)):
                 out += [[r+1, c-1]] #takes diagonally to the left
+            if (not outRange(r+1, c)) and board[r+1][c] == 0:
+                out += [[r+1, c]] #can move one step forward
             if (not outRange(r+1, c+1)) and (board[r+1][c+1] in range(20,26)):
                 out += [[r+1, c+1]] #takes diagonally to the right
         if board[r][c] == 20:
-            if r == 6 and board[r-2][c] == 0:
-                out += [[r-2, c]]   #if on home square, pawn can move up 2 steps
-            if (not outRange(r-1, c)) and board[r-1][c] == 0:
-                out += [[r-1, c]]   #can move one step forward
             if (not outRange(r-1, c-1)) and (board[r-1][c-1] in range(10,20)):
                 out += [[r-1, c-1]] #takes diagonally to the left
+            if (not outRange(r-1, c)) and board[r-1][c] == 0:
+                out += [[r-1, c]] #can move one step forward
             if (not outRange(r-1, c+1)) and (board[r-1][c+1] in range(10,20)):
                 out += [[r-1, c+1]] #takes diagonally to the right
         return out
@@ -202,21 +198,24 @@ def GetPieceLegalMoves(board, position):
         for e in particular:
             if board[e[0]][e[1]]/10 != board[r][c]/10:
                 out += [e]
-        # Castling
-        # TODO there are sooooo many exceptions with castling and idk if I have the desire to implement them
-        #   If a piece is obstructing a square in the path of the king castling
-        #   If the king as moved
-        #   If the rook has moved
-        if board[r][c] == 15:
-            if [r,c] == [0,4] and board[0][5] == 0 and board[0][6] == 0 and board[0][7] == 13:
-                out += [[0,6]]
-            if [r,c] == [0,4] and board[0][3] == 0 and board[0][2] == 0 and board[0][1] == 0 and board[0][0] == 13:
-                out += [[0,2]]
-        if board[r][c] == 25:
-            if [r,c] == [7,4] and board[7][5] == 0 and board[7][6] == 0 and board[7][7] == 23:
-                out += [[7,6]]
-            if [r,c] == [7,4] and board[7][3] == 0 and board[7][2] == 0 and board[7][1] == 0 and board[7][0] == 23:
-                out += [[7,2]]
+        """
+        if outRange(r-1, c-1) and board[r-1][c-1] == 0:
+            out += [[r-1, c-1]]
+        if outRange(r-1, c) and board[r-1][c] == 0:
+            out += [[r-1,c]]
+        if outRange(r-1, c+1) and board[r-1][c+1] == 0:
+            out += [[r-1,c+1]]
+        if outRange(r, c-1) and board[r][c-1] == 0:
+            out += [[r,c-1]]
+        if outRange(r, c+1) and board[r][c+1] == 0:
+            out += [[r,c+1]]
+        if outRange(r+1, c-1) and board[r+1][c-1] == 0:
+            out += [[r+1,c-1]]
+        if outRange(r+1, c) and board[r+1][c] == 0:
+            out += [[r+1,c]]
+        if outRange(r+1, c+1) and board[r+1][c+1] == 0:
+            out += [[r+1,c+1]]
+        """
         return out
 
 #this one includes the players own pieces...useful for later functions
@@ -388,7 +387,7 @@ def isInCheck(board,player):
 
     #checking if the king is in check
     #technically we could check for every piece on the board
-    #but so save time we will just check the valid moves of
+    #but so save time we will just check the valid moves of 
     #the opposing player
     for i in range(0,8):
         for j in range(0,8):
@@ -402,7 +401,7 @@ def findOutCheck(board,player):
     allLegalMoves = []
     out = []
     #this will be of the form [ [[i,j], [legal_move, legal_move, ...]], ... ]
-    #this will give us the index of all players and then
+    #this will give us the index of all players and then 
     for i in range(0,8):
         for j in range(0,8):
             #only care if other player is attacking our king
@@ -425,21 +424,21 @@ def findOutCheck(board,player):
             #checking if it can cause the king to not be in check
             if not isInCheck(temp,player):
                 out += [[pos,new_pos]]
-    return out
+    return out 
 
 def isCheckMate(board, player):
     if not isInCheck(board, player):
         return False
     allLegalMoves = []
-
+    
     #this will be of the form [ [[i,j], [legal_move, legal_move, ...]], ... ]
-    #this will give us the index of all players and then
+    #this will give us the index of all players and then 
     for i in range(0,8):
         for j in range(0,8):
             #only care if other player is attacking our king
             if board[i][j]/10 == player/10:
                 allLegalMoves += [ [[i,j], GetPieceLegalMoves(board, [i,j])] ]
-
+    
     #now we iterate thorugh all legal moves and see if any cause the king to not be in check
     for e in allLegalMoves:
         for i in range(0, len(e[1])):
@@ -452,7 +451,7 @@ def isCheckMate(board, player):
             pos = e[0]
             new_pos = e[1][i]
             temp[new_pos[0]][new_pos[1]] = temp[pos[0]][pos[1]]
-            temp[pos[0]][pos[1]] = 0
+            temp[pos[0]][pos[1]] = 0 
             #checking if it can cause the king to not be in check
             if not isInCheck(temp,player):
                 return False
@@ -476,7 +475,7 @@ def whoAttacking(board,position,player):
     squaresAttacked = []
     out = []
     #this will be of the form [[piece_loc, [legal_move, legal_move, ...]], [piece_loc, [legal_move, legal_move, ...]], ...]
-    #this will give us the index of all players and then
+    #this will give us the index of all players and then 
     for i in range(0,8):
         for j in range(0,8):
             #iterating through all white positions
@@ -500,8 +499,8 @@ def whoAttacking(board,position,player):
                 squaresAttacked += [[[i,j], GetPieceLegalMoves2(new_board, [i,j])]]
     for L in squaresAttacked:
         if position in L[1]:
-            out += [L[0]]
-
+            out += [L[0]] 
+    
     #and technically I should check an arbitrary number of times, but realistically you will only
     #ever have 3 pieces in a line: queen, rook, rook or queen, bishop, pawn
     #so we do it one more time
@@ -516,7 +515,7 @@ def whoAttacking(board,position,player):
                 squaresAttacked += [[[i,j], GetPieceLegalMoves2(new_board, [i,j])]]
     for L in squaresAttacked:
         if position in L[1]:
-            out += [L[0]]
+            out += [L[0]] 
     return out
 
 def numAttackers(board,position,player):
@@ -537,11 +536,11 @@ def isProtected(board, pos):
         for i in range(0,len(black_attack)):
             p = black_attack[i]
             black_val += [pieceValue[board[p[0]][p[1]]%20]]
-
+        
         #if there are no attackers --> protected
         if black_val == []:
             return [True, black_attack]
-
+        
         #if there exists attackers and no defenders --> not protected
         if white_val == [] and black_val != []:
             return [False, black_attack]
@@ -554,13 +553,13 @@ def isProtected(board, pos):
         #make lists that we can manipulate
         white_take = list(white_val)
         black_take = list(black_val)
-
+        
         #first we order the lists to be in the order that they would take in
         white_take.sort()
         white_take = [pieceValue[board[pos[0]][pos[1]]%10]] + white_take
         #white_tae = white_take[:len(white_take)-1] #since the last piece cannot be taken
         black_take.sort()
-
+        
         #okay so here's the premise, black can stop taking whenever he wants
         #so if there ever exists a time where black can stop taking and be up material
         #then the piece is not protected
@@ -586,7 +585,7 @@ def isProtected(board, pos):
                 else:
                     return [True, black_attack]
         return [True, black_attack]
-
+        
     #if position contains a black piece
     if board[pos[0]][pos[1]]/10 == 2:
         #getting attackers and defenders
@@ -601,7 +600,7 @@ def isProtected(board, pos):
         for i in range(0,len(black_attack)):
             p = black_attack[i]
             black_val += [pieceValue[board[p[0]][p[1]]%20]]
-
+        
         #if there are no attackers --> protected
         if white_val == []:
             return [True, white_attack]
@@ -650,7 +649,7 @@ def isProtected(board, pos):
                 else:
                     return [True, white_attack]
         return [True, white_attack]
-
+    
     #if position does not contain any pieces, return Nothing
     return [None, []]
 

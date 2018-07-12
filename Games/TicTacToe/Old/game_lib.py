@@ -73,14 +73,14 @@ def Game_CC(AI1, AI2):
 
     while state == 0:
         #computer 1 move
-        comp = AI1(x.board, 1)
+        comp = AI1(x.board)
         x.Move(comp,1)
         x.Display()
         state = x.AnalyzeBoard()
 
         #computer 2 move
         if state == 0:
-            comp = AI2(x.board, 2)
+            comp = AI2(x.board)
             x.Move(comp,2)
             x.Display()
             state = x.AnalyzeBoard()

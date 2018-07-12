@@ -1,10 +1,12 @@
 class queue:
-    store = []
+    
+    def __init__(self):
+        self.store = []
 
-    def push(self, val):
+    def enq(self, val):
         self.store += [val]
 
-    def pop(self):
+    def deq(self):
         if self.store == []:
             return False
         r = self.store[0]
@@ -16,20 +18,20 @@ class queue:
             print self.store[i]
 
 x = queue()
-x.push(10)
-x.push(20)
-x.push(30)
-x.push(40)
+x.enq(10)
+x.enq(20)
+x.enq(30)
+x.enq(40)
 x.Displ()
 print
-x.pop()
+x.deq()
 x.Displ()
 print
-x.pop()
+x.deq()
 x.Displ()
 print
-x.pop()
+x.deq()
 x.Displ()
 print
-x.pop()
+x.deq()
 x.Displ()
