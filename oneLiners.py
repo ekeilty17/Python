@@ -1,24 +1,36 @@
-#I don't really believe in one-liners, I value readability
-#nevertheless, these are fun to come up with
+"""
+Some of these are useful and some of these I made just for the intelectual exercise.
+"""
 
 A = [[1,2,3,0], [4,5,6,0], [7,8,9,0]]
 print A
 print
 
-#Flatten a Matrix
+# Flatten a Matrix
 Flat = [num for elem in A for num in elem]
 print Flat
 print
 
-#Print a Matrix
-for i in range(len(A)): print ' '.join(str(n) for n in [A[x][y] for x in range(len(A)) for y in range(len(A[0]))][ len(A[0])*i : len(A[0])*(i+1) ])
+# Print a Matrix
+print ' ' + ' '.join([str(num) for elem in A for num in elem + ['\n']])
 print
 
+# Print largest possible number for a given bit/byte size
 print '\n'.join("%i Byte = %i Bit = largest number: %i" % (j, j*8, 256**j-1) for j in (1 << i for i in xrange(8)))
 
-#Generate a list of prime numbers between 1 and n
+# Generate a list of prime numbers between 1 and n
 n = 100
 print [x for x in range(2,n)
         if not [y for y in range(2, int(x**0.5)+1)
             if x % y == 0] ]
 print
+
+# Function that returns all subsets of a an input list
+f = lambda l: reduce(lambda z, x: z + [y + [x] for y in z], l, [[]])
+print f([10, 1, 1, 1, 10, -2]) # treat repeated entries as independent
+print
+print f(set([10, 1, 1, 1, 10, -2])) # treat repeated entries as the same instance
+print
+
+# Print lust of all users
+#print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
