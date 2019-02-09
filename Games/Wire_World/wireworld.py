@@ -1,12 +1,11 @@
-from conwaylib import *
-from random import randint
+from wwlib import *
+from boards import *
 from time import sleep
 import os
 
-r=40
-c=30
-C=conway(r,c,False)
+WW=wireworld(0, 0, Circle)
 
+"""
 C.setPos(10,10,1)
 C.setPos(9,10,1)
 C.setPos(12,10,1)
@@ -20,12 +19,13 @@ C.setPos(11,21,1)
 C.setPos(12,19,1)
 C.setPos(12,20,1)
 C.setPos(12,21,1)
+"""
 
 n = 0
 while True:
-   C.evolve(rule)
    os.system('clear')
-   C.Display()
+   WW.Display()
    print "STEP:",n
-   sleep(0.05)
-   n += 1
+   sleep(0.5)
+   WW.evolve(rule)
+   n = n+1

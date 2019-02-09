@@ -18,6 +18,8 @@ G.addEdge(3,2,True,1)
 print "Represenation of the Graph"
 G.printEdges()
 print
+print G.adj
+"""
 print "Remove Edge"
 G.removeEdge(3,2)
 G.printEdges()
@@ -35,3 +37,4 @@ print traverse(G,None,False)
 print
 print "Topological Ordering"
 print topologicalOrdering(G)
+"""

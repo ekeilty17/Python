@@ -114,9 +114,6 @@ class Matrix():
         return self
     
     def transpose(self):
-        if not self.isSquare():
-            raise TypeError("Determinant is only defined for square matrices.")
-            return -1
         out = []
         for c in range(len(self.store[0])):
             temp = []
