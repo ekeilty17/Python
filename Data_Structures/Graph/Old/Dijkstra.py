@@ -9,7 +9,7 @@ def Dijkstra(G,start):
 
     dist[start] = 0
     while len(L) != 0:
-        # I: find minIdx \in L s.t. dist[minIdx] is minimized
+        # I: find minIdx in L s.t. dist[minIdx] is minimized
         minDist = -1
         minIdx  = -1
         for i in L:
@@ -34,7 +34,7 @@ def Dijkstra(G,start):
                 if (dist[x[0]] == -1) or ((dist[x[0]] != -1) and (d < dist[x[0]])):
                     dist[x[0]] = d
                     prev[x[0]] = minIdx
-    return [True,dist,prev]
+    return [dist, prev]
 
 #not done
 def ShortestPath(G,v0,vf):

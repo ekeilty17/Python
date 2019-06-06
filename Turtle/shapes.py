@@ -58,6 +58,8 @@ def satan(s):
     r = s / (2*sin(rad(108)))
     circle(r)
 
-satan(300)
+
+for i in range(3, 12):
+    n_gon(60, i)
 
 alex.getscreen()._root.mainloop()

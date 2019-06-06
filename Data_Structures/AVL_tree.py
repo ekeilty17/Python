@@ -3,7 +3,7 @@ from binary_tree import binary_tree
 class AVL_tree(binary_tree):
     
     def __init__(self, val):
-        binary_tree.__init__(self, val)
+        BinaryTree.__init__(self, val)
         self.height = self.assign_heights()
     
     def assign_heights(self):

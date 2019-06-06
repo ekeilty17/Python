@@ -6,10 +6,27 @@ def parent(index):
     else:
         return (index-1)/2
 
-class heap:
+class Heap:
 
     def __init__(self):
         self.store = []
+
+    def __str__(self):
+        return str(self.store)
+    
+    def __len__(self):
+        return len(self.store)
+    
+    def __getitem__(self, i):
+        return self.store[i]
+    
+    def getParent(self, i):
+        if i <= 0:
+            return None
+        if i % 2 == 0:
+            return (i-2)/2
+        else:
+            return (i-1)/2
 
     def add(self, val):
         self.store += [val]
@@ -25,12 +42,6 @@ class heap:
             self.store[index] = self.store[parent(index)]
             self.store[parent(index)] = temp
             index = parent(index)
-        return True
-
-    def Display(self):
-        for i in self.store:
-            print i
-        return True
     
     def delete_root(self):
         #swap root with last element
@@ -67,21 +78,22 @@ class heap:
                 self.store[2*index+2] = temp
                 index = 2*index+2
 
-h = heap()
-h.add(1)
-h.add(20)
-h.add(10)
-h.add(30)
-h.add(100)
-h.add(-5)
-h.add(20)
+if __name__ == "__main__":
+    H = Heap()
+    H.add(1)
+    H.add(20)
+    H.add(10)
+    H.add(30)
+    H.add(100)
+    H.add(-5)
+    H.add(20)
 
-h.Display()
-print
+    print H
+    print
 
-h.delete_root()
-h.Display()
-print
-h.delete_root()
-h.Display()
-print
+    H.delete_root()
+    print H
+    print
+    H.delete_root()
+    print H
+    print

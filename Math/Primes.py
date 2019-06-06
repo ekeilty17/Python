@@ -254,7 +254,7 @@ def isPrime_Miller(n):
 #If you are wondering how using random numbers can be an efficient way to factor large numbers
 #look up the birthday paradox, it's unituitive for the same reason as the birthday paradox
 #The number of possible combinations is very large and it is very easy to guess right
-#This method was called "Monte Carlo Factorization by Pollard because of the use of random numbers
+#This method was called "Monte Carlo Factorization" by Pollard because of the use of random numbers
 #
 #Pollard's Rho Method
 def rho_factors(n, limit=1000000):

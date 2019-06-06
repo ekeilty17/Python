@@ -51,39 +51,38 @@ class color:
         light_grey =    '\033[47m'
 
 
+if __name__ == "__main__":
+    #Testing
+    print "Normal Text"
+    print
+    print color.fg.black + "Black Text"
+    print color.fg.dark_red + "Dark Red Text"
+    print color.fg.red + "Red Text"
+    print color.fg.dark_green + "Dark Green Text"
+    print color.fg.green + "Green Text"
+    print color.fg.dark_yellow + "Dark Yellow Text"
+    print color.fg.yellow + "Yellow Text"
+    print color.fg.blue + "Blue Text"
+    print color.fg.magenta + "Magenta Text"
+    print color.fg.cyan + "Cyan Text"
+    print color.fg.light_cyan + "Light Cyan Text"
+    print color.fg.grey + "Grey Text"
+    print color.fg.light_grey + "Light Grey Text" + color.fg.reset
+    print
+    print color.bg.black + "Black Background" + color.bg.reset
+    print color.bg.red + "Red Background"  + color.bg.reset
+    print color.bg.green + "Green Background"  + color.bg.reset
+    print color.bg.yellow + "Yellow Background"  + color.bg.reset
+    print color.bg.blue + "Blue Background"  + color.bg.reset
+    print color.bg.purple + "Purple Background"  + color.bg.reset
+    print color.bg.cyan + "Cyan Background"  + color.bg.reset
+    print color.bg.light_grey + "Light Grey Background" + color.bg.reset
+    print
+    print color.fg.yellow + color.style.bold + "Bold Text" + color.reset_all
+    print color.fg.yellow + color.style.dim + "Dim Text" + color.reset_all
+    print color.fg.yellow + color.style.italic + "Italic Text" + color.reset_all
+    print color.fg.yellow + color.style.underline + "Underlined Text" + color.reset_all
+    print color.fg.yellow + color.style.blinking + "Blinking Text" + color.reset_all
+    print color.fg.yellow + color.style.inverted + "Inverted Text" + color.reset_all
+    print color.fg.yellow + color.style.invisible + "Invisible Text" + color.reset_all
 
-"""
-#Testing
-print "Normal Text"
-print
-print color.fg.black + "Black Text"
-print color.fg.dark_red + "Dark Red Text"
-print color.fg.red + "Red Text"
-print color.fg.dark_green + "Dark Green Text"
-print color.fg.green + "Green Text"
-print color.fg.dark_yellow + "Dark Yellow Text"
-print color.fg.yellow + "Yellow Text"
-print color.fg.blue + "Blue Text"
-print color.fg.magenta + "Magenta Text"
-print color.fg.cyan + "Cyan Text"
-print color.fg.light_cyan + "Light Cyan Text"
-print color.fg.grey + "Grey Text"
-print color.fg.light_grey + "Light Grey Text" + color.fg.reset
-print
-print color.bg.black + "Black Background" + color.bg.reset
-print color.bg.red + "Red Background"  + color.bg.reset
-print color.bg.green + "Green Background"  + color.bg.reset
-print color.bg.yellow + "Yellow Background"  + color.bg.reset
-print color.bg.blue + "Blue Background"  + color.bg.reset
-print color.bg.purple + "Purple Background"  + color.bg.reset
-print color.bg.cyan + "Cyan Background"  + color.bg.reset
-print color.bg.light_grey + "Light Grey Background" + color.bg.reset
-print
-print color.fg.yellow + color.style.bold + "Bold Text" + color.reset_all
-print color.fg.yellow + color.style.dim + "Dim Text" + color.reset_all
-print color.fg.yellow + color.style.italic + "Italic Text" + color.reset_all
-print color.fg.yellow + color.style.underline + "Underlined Text" + color.reset_all
-print color.fg.yellow + color.style.blinking + "Blinking Text" + color.reset_all
-print color.fg.yellow + color.style.inverted + "Inverted Text" + color.reset_all
-print color.fg.yellow + color.style.invisible + "Invisible Text" + color.reset_all
-"""

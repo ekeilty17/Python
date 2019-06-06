@@ -73,7 +73,7 @@ while gameLoop:
     pygame.display.flip()
 
     # Refresh speed
-    clock.tick(20)
+    clock.tick(10)
 
     # handling is snake crashes into itself
     if S.body.getHead() in S.body.store[:-1]:

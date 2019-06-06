@@ -6,9 +6,11 @@ A = [[1,2,3,0], [4,5,6,0], [7,8,9,0]]
 print A
 print
 
+# Copy a Matrix
+A_copy = [x[:] for x in A]
+
 # Flatten a Matrix
-Flat = [num for elem in A for num in elem]
-print Flat
+print [num for elem in A for num in elem]
 print
 
 # Print a Matrix
@@ -17,6 +19,7 @@ print
 
 # Print largest possible number for a given bit/byte size
 print '\n'.join("%i Byte = %i Bit = largest number: %i" % (j, j*8, 256**j-1) for j in (1 << i for i in xrange(8)))
+print
 
 # Generate a list of prime numbers between 1 and n
 n = 100
@@ -32,5 +35,5 @@ print
 print f(set([10, 1, 1, 1, 10, -2])) # treat repeated entries as the same instance
 print
 
-# Print lust of all users
+# Print list of all users
 #print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))

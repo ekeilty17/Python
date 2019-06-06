@@ -77,6 +77,7 @@ def B(l):
 def C(l):
     return None
 
-
+for i in range(100, 0, -10):
+    B(i)
 
 alex.getscreen()._root.mainloop()

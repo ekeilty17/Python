@@ -1,7 +1,8 @@
 file_name = "selfEditing.py"
 
-lines = open(file_name, 'r').readlines()
+with open(file_name, 'r') as f:
+    lines = f.readlines()
 lines += 'print "This is added content"\n' 
-f = open(file_name, 'w')
-f.writelines(lines)
-f.close()
+
+with open(file_name, 'w') as g:
+    g.writelines(lines)
